@@ -22,7 +22,7 @@ namespace IRFestival.Api.Data
                       new Artist { Id = 2, FestivalId = 1, Name = "The Commodores", ImagePath = "thecommodores.jpg", Website = new Uri("http://en.wikipedia.org/wiki/Commodores") },
                       new Artist { Id = 3, FestivalId = 1, Name = "Stevie Wonder", ImagePath = "steviewonder.jpg", Website = new Uri("http://www.steviewonder.net/") },
                       new Artist { Id = 4, FestivalId = 1, Name = "Lionel Richie", ImagePath = "lionelrichie.jpg", Website = new Uri("http://lionelrichie.com/") },
-                      new Artist { Id = 5, FestivalId = 1, Name = "Lucky luck", ImagePath = "marvingaye.jpg", Website = new Uri("http://www.marvingayepage.net/") }
+                      new Artist { Id = 5, FestivalId = 1, Name = "Lucky luckyyyy", ImagePath = "marvingaye.jpg", Website = new Uri("http://www.marvingayepage.net/") }
             };
 
             var lineUp = new Schedule() { Id = 1, FestivalId = 1 };
