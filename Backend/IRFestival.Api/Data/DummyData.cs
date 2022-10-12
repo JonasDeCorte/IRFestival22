@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-using IRFestival.Api.Domain;
+﻿using IRFestival.Api.Domain;
 
 namespace IRFestival.Api.Data
 {
-    static class FestivalDataSource
+    internal static class FestivalDataSource
     {
         public static Festival Current { get; private set; }
 
@@ -16,7 +13,8 @@ namespace IRFestival.Api.Data
             var stages = new List<Stage>() {
                          new Stage { Id = 1, FestivalId = 1, Name = "Main Stage", Description = description },
                          new Stage { Id = 2, FestivalId = 1, Name = "Orange Room", Description = description },
-                         new Stage { Id = 3, FestivalId = 1, Name = "StarDust", Description = description }
+                         new Stage { Id = 3, FestivalId = 1, Name = "StarDust", Description = description },
+                         new Stage { Id = 4, FestivalId = 1, Name = "Blue Room", Description = description }
             };
 
             var artists = new List<Artist>() {
@@ -24,17 +22,17 @@ namespace IRFestival.Api.Data
                       new Artist { Id = 2, FestivalId = 1, Name = "The Commodores", ImagePath = "thecommodores.jpg", Website = new Uri("http://en.wikipedia.org/wiki/Commodores") },
                       new Artist { Id = 3, FestivalId = 1, Name = "Stevie Wonder", ImagePath = "steviewonder.jpg", Website = new Uri("http://www.steviewonder.net/") },
                       new Artist { Id = 4, FestivalId = 1, Name = "Lionel Richie", ImagePath = "lionelrichie.jpg", Website = new Uri("http://lionelrichie.com/") },
-                      new Artist { Id = 5, FestivalId = 1, Name = "Marvin Gaye", ImagePath = "marvingaye.jpg", Website = new Uri("http://www.marvingayepage.net/") }
+                      new Artist { Id = 5, FestivalId = 1, Name = "Lucky luck", ImagePath = "marvingaye.jpg", Website = new Uri("http://www.marvingayepage.net/") }
             };
 
             var lineUp = new Schedule() { Id = 1, FestivalId = 1 };
 
             lineUp.Items.Add(new ScheduleItem { Id = 1, Artist = artists[0], Stage = stages[0], Time = new DateTime(1972, 07, 01, 20, 0, 0) });
-            lineUp.Items.Add(new ScheduleItem { Id = 2, Artist = artists[4], Stage = stages[1], Time = new DateTime(1972, 07, 01, 20, 30, 0) });
+            lineUp.Items.Add(new ScheduleItem { Id = 2, Artist = artists[4], Stage = stages[3], Time = new DateTime(1972, 07, 01, 20, 30, 0) });
             lineUp.Items.Add(new ScheduleItem { Id = 3, Artist = artists[2], Stage = stages[0], Time = new DateTime(1972, 07, 01, 22, 0, 0) });
             lineUp.Items.Add(new ScheduleItem { Id = 4, Artist = artists[1], Stage = stages[1], Time = new DateTime(1972, 07, 01, 22, 15, 0) });
             lineUp.Items.Add(new ScheduleItem { Id = 5, Artist = artists[0], Stage = stages[0], Time = new DateTime(1972, 07, 02, 20, 15, 0) });
-            lineUp.Items.Add(new ScheduleItem { Id = 6, Artist = artists[4], Stage = stages[1], Time = new DateTime(1972, 07, 02, 20, 45, 0) });
+            lineUp.Items.Add(new ScheduleItem { Id = 6, Artist = artists[4], Stage = stages[3], Time = new DateTime(1972, 07, 02, 20, 45, 0) });
             lineUp.Items.Add(new ScheduleItem { Id = 7, Artist = artists[3], Stage = stages[0], Time = new DateTime(1972, 07, 02, 22, 0, 0) });
             lineUp.Items.Add(new ScheduleItem { Id = 8, Artist = artists[1], Stage = stages[1], Time = new DateTime(1972, 07, 02, 22, 30, 0) });
 
