@@ -1,3 +1,6 @@
+using Azure.Storage;
+using Azure.Storage.Blobs;
+using IRFestival.Api.Common;
 using IRFestival.Api.Data;
 using IRFestival.Api.Options;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +23,15 @@ sqlServerOptionsAction: sqlOptions =>
 }
 
 ));
+var storageSharedKeyCredentials = new StorageSharedKeyCredential(
+    builder.Configuration.GetValue<string>("Storage:AccountName"),
+    builder.Configuration.GetValue<string>("Storage:AccountKey"));
+string blobUri = "https://" + storageSharedKeyCredentials.AccountName + ".blob.core.windows.net";
+builder.Services.AddSingleton(p => new BlobServiceClient(new Uri(blobUri), storageSharedKeyCredentials));
+builder.Services.AddSingleton(p => storageSharedKeyCredentials);
+builder.Services.AddSingleton<BlobUtility>();
+builder.Services.Configure<BlobSettingsOptions>(builder.Configuration.GetSection("Storage"));
+
 builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
 var app = builder.Build();
 

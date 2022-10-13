@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Azure.Storage.Blobs;
+using IRFestival.Api.Common;
+using IRFestival.Api.Options;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using System.Net;
+using System.Web;
 
 namespace IRFestival.Api.Controllers
 {
@@ -8,15 +11,30 @@ namespace IRFestival.Api.Controllers
     [ApiController]
     public class PicturesController : ControllerBase
     {
-        [HttpGet]
-        public string[] GetAllPictureUrls()
+        public BlobUtility BlobUtility { get; }
+
+        public PicturesController(BlobUtility blobUtility)
         {
-            return Array.Empty<string>();
+            BlobUtility = blobUtility;
+        }
+
+        [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(string[]))]
+        public async Task<ActionResult> GetAllPictureUrls()
+        {
+            var container = BlobUtility.GetPicturesContainer();
+            return Ok(container.GetBlobs().Select(blob => BlobUtility.GetSasUri(container, blob.Name)).ToArray());
         }
 
         [HttpPost]
-        public void PostPicture(IFormFile file)
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(AppSettingsOptions))]
+        public async Task<ActionResult> PostPicture(IFormFile file)
         {
+            BlobContainerClient container = BlobUtility.GetPicturesContainer();
+            var filename = $"{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}{HttpUtility.UrlPathEncode(file.FileName)}";
+            await container.UploadBlobAsync(filename, file.OpenReadStream());
+
+            return Ok();
         }
     }
 }
