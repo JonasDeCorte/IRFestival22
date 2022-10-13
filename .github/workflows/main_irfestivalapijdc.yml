@@ -7,14 +7,15 @@ on:
   push:
     branches:
       - main
-  paths:
-    -'Backend/**'
+    paths:
+      - 'Backend/**'
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: windows-latest
     defaults:
-      run: 
+      run:
         working-directory: ./Backend
 
     steps:
