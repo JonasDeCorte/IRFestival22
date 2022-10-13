@@ -24,7 +24,6 @@ namespace IRFestival.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(Schedule))]
         public async Task<ActionResult> GetLineUp()
         {
-            throw new ApplicationException("this is an app error");
             var lineUp = await _ctx.Schedules.Include(x => x.Festival)
                                                         .Include(x => x.Items)
                                                         .ThenInclude(x => x.Artist)
