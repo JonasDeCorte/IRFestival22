@@ -21,7 +21,11 @@ namespace IRFestival.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(Schedule))]
         public async Task<ActionResult> GetLineUp()
         {
-            List<Schedule> lineUp = await _ctx.Schedules.Include(x => x.Items).ToListAsync();
+            List<Schedule> lineUp = await _ctx.Schedules.Include(x => x.Items)
+                                                        .ThenInclude(x => x.Artist)
+                                                        .Include(x => x.Items)
+                                                        .ThenInclude(x => x.Stage)
+                                                        .ToListAsync();
 
             return Ok(lineUp);
         }
