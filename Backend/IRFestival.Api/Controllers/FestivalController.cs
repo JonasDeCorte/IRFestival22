@@ -1,5 +1,6 @@
 ﻿using IRFestival.Api.Data;
 using IRFestival.Api.Domain;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -11,16 +12,19 @@ namespace IRFestival.Api.Controllers
     public class FestivalController : ControllerBase
     {
         private readonly FestivalDbContext _ctx;
+        private readonly TelemetryClient telemetryClient;
 
-        public FestivalController(FestivalDbContext ctx)
+        public FestivalController(FestivalDbContext ctx, TelemetryClient telemetryClient)
         {
             _ctx = ctx;
+            this.telemetryClient = telemetryClient;
         }
 
         [HttpGet("LineUp")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(Schedule))]
         public async Task<ActionResult> GetLineUp()
         {
+            throw new ApplicationException("this is an app error");
             var lineUp = await _ctx.Schedules.Include(x => x.Festival)
                                                         .Include(x => x.Items)
                                                         .ThenInclude(x => x.Artist)
@@ -33,10 +37,18 @@ namespace IRFestival.Api.Controllers
 
         [HttpGet("Artists")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(IEnumerable<Artist>))]
-        public async Task<ActionResult> GetArtists()
+        public async Task<ActionResult> GetArtists(bool? rating)
         {
             List<Artist> artists = await _ctx.Artists.ToListAsync();
-            return Ok(artists);
+            if (rating.HasValue && rating.Value)
+            {
+                telemetryClient.TrackEvent($"LIST OF ARTISTS WITH RATINGS");
+            }
+            else
+            {
+                telemetryClient.TrackEvent($"LIST OF ARTISTS without RATINGS");
+            }
+            return base.Ok(artists);
         }
 
         [HttpGet("Stages")]
