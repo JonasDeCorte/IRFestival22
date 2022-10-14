@@ -15,6 +15,7 @@ namespace IRFestival.Function2
             [BlobTrigger("festivalpics-uploaded/{name}", Connection = "BlobStorageConnection")] Stream image, string name, ILogger log,
              [Blob("festivalthumbs/{name}", FileAccess.Write, Connection = "BlobStorageConnection")] Stream thumbnail)
         {
+            // test for rerun
             using Image<Rgba32> input = Image.Load<Rgba32>(image, out IImageFormat format);
             input.Mutate(i =>
             {
