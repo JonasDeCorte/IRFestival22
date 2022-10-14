@@ -25,4 +25,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\IRFestival.Function2\IRFestival.Function2.csproj" />
+  </ItemGroup>
+
 </Project>

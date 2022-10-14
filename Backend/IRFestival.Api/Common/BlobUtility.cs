@@ -21,6 +21,8 @@ namespace IRFestival.Api.Common
 
         public BlobContainerClient GetPicturesContainer() => Client.GetBlobContainerClient(Options.PicturesContainer);
 
+        public BlobContainerClient GetThumbsContainer() => Client.GetBlobContainerClient(Options.ThumbsContainer);
+
         public string GetSasUri(BlobContainerClient container, string blobName)
         {
             // create sas token thats valid for two minutes.
