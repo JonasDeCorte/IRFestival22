@@ -29,7 +29,7 @@ namespace IRFestival.Function2
             ImageAnalysis imageAnalysis = await ComputerVisionClient.AnalyzeImageInStreamAsync(new MemoryStream(myBlob), Features);
             log.LogInformation($"C# Blob trigger function Processed blob\n Name:{name} \n Size: {myBlob.Length} Bytes");
             Attribute[] attributes;
-            if (imageAnalysis.Adult.IsAdultContent || imageAnalysis.Adult.IsGoryContent || imageAnalysis.Adult.IsRacyContent)
+            if (imageAnalysis.Adult.AdultScore < 0.3 || imageAnalysis.Adult.GoreScore < 0.3 || imageAnalysis.Adult.IsRacyContent)
             {
                 attributes = new Attribute[]
                 {

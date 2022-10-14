@@ -1,3 +1,4 @@
+using Azure.Identity;
 using Azure.Storage;
 using Azure.Storage.Blobs;
 using IRFestival.Api.Common;
@@ -14,6 +15,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+if (!builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddAzureKeyVault(new Uri($"https://irfestivalkeyvaultjdc2.vault.azure.net/"),
+    new DefaultAzureCredential(new DefaultAzureCredentialOptions()));
+}
+
 builder.Services.Configure<AppSettingsOptions>(builder.Configuration.GetSection("AppSettings"));
 builder.Services.AddDbContext<FestivalDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
