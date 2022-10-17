@@ -19,9 +19,16 @@ namespace IRFestival.Api.Controllers
             this.featureManager = featureManager;
         }
 
-        [HttpGet("Features")]
+        [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(AppSettingsOptions))]
         public async Task<ActionResult> Get()
+        {
+            return Ok("IR Festival");
+        }
+
+        [HttpGet("Features")]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(AppSettingsOptions))]
+        public async Task<ActionResult> GetFeatures()
         {
             string message = await featureManager.IsEnabledAsync("BuyTickets")
                 ? "The ticket sale has started, go go go."
