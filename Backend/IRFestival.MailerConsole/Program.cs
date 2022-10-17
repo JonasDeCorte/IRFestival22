@@ -1,5 +1,9 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Azure.Messaging.ServiceBus;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit;
+using MimeKit.Text;
 using System.Text.Json;
 
 Console.WriteLine("Hello, I'm a Mailer Console Application!");
@@ -27,12 +31,21 @@ static async Task MessageHandler(ProcessMessageEventArgs args)
     var body = args.Message.Body;
 
     Console.WriteLine($"mail to send: {body}");
-
+    var email = new MimeMessage();
+    email.From.Add(MailboxAddress.Parse("salvador.little5@ethereal.email"));
+    email.To.Add(MailboxAddress.Parse("jdecorte6@gmail.com"));
+    email.Subject = "Test Email Subject";
+    email.Body = new TextPart(TextFormat.Html) { Text = $"<h1>Example HTML Message Body {body}</h1>" };
     MessageModel deserialized = JsonSerializer.Deserialize<MessageModel>(body);
 
     Console.WriteLine($"mail to send: {deserialized.Message} " +
         $"email: {deserialized.Email}");
 
+    using var smtp = new SmtpClient();
+    smtp.Connect("smtp.ethereal.email", 587, SecureSocketOptions.StartTls);
+    smtp.Authenticate("salvador.little5@ethereal.email", "cuEuRjjfSTXdyFnw91");
+    smtp.Send(email);
+    smtp.Disconnect(true);
     await args.CompleteMessageAsync(args.Message);
 }
 static Task ErrorHandler(ProcessErrorEventArgs args)

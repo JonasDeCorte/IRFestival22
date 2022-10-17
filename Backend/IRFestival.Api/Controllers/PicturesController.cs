@@ -2,7 +2,9 @@
 using Azure.Storage.Blobs;
 using IRFestival.Api.Common;
 using IRFestival.Api.Options;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web.Resource;
 using System.Net;
 using System.Text.Json;
 using System.Web;
@@ -15,6 +17,7 @@ namespace IRFestival.Api.Controllers
     {
         public BlobUtility BlobUtility { get; }
         private readonly IConfiguration Configuration;
+        private readonly string[] ScopesRequiredByApiToUploadPictures = new string[] { "Pictures.Upload.All" };
 
         public PicturesController(BlobUtility blobUtility, IConfiguration configuration)
         {
@@ -31,9 +34,11 @@ namespace IRFestival.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(AppSettingsOptions))]
         public async Task<ActionResult> PostPicture(IFormFile file)
         {
+            HttpContext.VerifyUserHasAnyAcceptedScope(ScopesRequiredByApiToUploadPictures);
             BlobContainerClient container = BlobUtility.GetPicturesContainer();
             var fileNameWithoutSpecialChars = file.FileName.Replace(" ", "");
             var filename = $"{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}{HttpUtility.UrlPathEncode(fileNameWithoutSpecialChars)}";
