@@ -33,7 +33,7 @@ namespace IRFestival.Api.Controllers
             return Ok(container.GetBlobs().Select(blob => BlobUtility.GetSasUri(container, blob.Name)).ToArray());
         }
 
-        [HttpPost]
+        [HttpPost("upload")]
         [Authorize]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(AppSettingsOptions))]
         public async Task<ActionResult> PostPicture(IFormFile file)
