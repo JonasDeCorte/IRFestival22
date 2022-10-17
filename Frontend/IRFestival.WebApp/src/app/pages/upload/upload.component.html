@@ -1,9 +1,18 @@
 <h2>Upload Picture</h2>
+<div *ngIf="!loginDisplay">
+  <p>Please sign in to upload a picture</p>
+</div>
 
-<form [formGroup]="uploadForm" (submit)="onFormSubmit()">
+<div *ngIf="loginDisplay">
+  <form [formGroup]="uploadForm" (submit)="onFormSubmit()">
     <fieldset>
-        <legend>Picture</legend>
-        <input type="file" formControlName="file" (change)="onFileChange($event)" />
-        <input type="submit" value="Upload" />
+      <legend>Picture</legend>
+      <input
+        type="file"
+        formControlName="file"
+        (change)="onFileChange($event)"
+      />
+      <input type="submit" value="Upload" />
     </fieldset>
-</form>
+  </form>
+</div>

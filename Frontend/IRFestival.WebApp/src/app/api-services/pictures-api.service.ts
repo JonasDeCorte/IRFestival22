@@ -28,7 +28,7 @@ export class PicturesApiService {
       'Ocp-Apim-Subscription-Key',
       'b8d07e37b1d044e28bffea3f2ee68a91'
     );
-    return this.httpClient.post<never>(`${this.baseUrl}`, data, {
+    return this.httpClient.post<never>(`${this.baseUrl}/upload`, data, {
       headers: headers,
     });
   }

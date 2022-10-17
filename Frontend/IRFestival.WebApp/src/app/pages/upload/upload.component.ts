@@ -2,24 +2,42 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PicturesApiService } from 'src/app/api-services/pictures-api.service';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
+import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
+import { InteractionStatus } from '@azure/msal-browser';
 
 @Component({
   selector: 'app-upload',
-  templateUrl: './upload.component.html'
+  templateUrl: './upload.component.html',
 })
 export class UploadComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject();
-
+  loginDisplay: Boolean = false;
   uploadForm: FormGroup;
   private fileToUpload: File;
-
-  constructor(private picturesApiService: PicturesApiService) { }
+  msalBroadcastService: MsalBroadcastService;
+  authService: MsalService;
+  constructor(
+    private picturesApiService: PicturesApiService,
+    msalBroadcastService: MsalBroadcastService,
+    authService: MsalService
+  ) {
+    this.msalBroadcastService = msalBroadcastService;
+    this.authService = authService;
+  }
 
   ngOnInit(): void {
     this.uploadForm = new FormGroup({
-      file: new FormControl(undefined, Validators.required)
+      file: new FormControl(undefined, Validators.required),
     });
+    this.msalBroadcastService.inProgress$
+      .pipe(
+        filter((status: InteractionStatus) => status === InteractionStatus.None)
+      )
+      .subscribe(() => {
+        this.loginDisplay =
+          this.authService.instance.getAllAccounts().length > 0;
+      });
   }
 
   ngOnDestroy(): void {
@@ -40,9 +58,9 @@ export class UploadComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.picturesApiService.upload(this.fileToUpload)
+    this.picturesApiService
+      .upload(this.fileToUpload)
       .pipe(takeUntil(this.destroy$))
       .subscribe();
   }
-
 }
