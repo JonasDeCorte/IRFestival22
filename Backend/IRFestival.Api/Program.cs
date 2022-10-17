@@ -5,6 +5,7 @@ using IRFestival.Api.Common;
 using IRFestival.Api.Data;
 using IRFestival.Api.Options;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.FeatureManagement;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,12 @@ if (!builder.Environment.IsDevelopment())
     builder.Configuration.AddAzureKeyVault(new Uri($"https://irfestivalkeyvaultjdc2.vault.azure.net/"),
     new DefaultAzureCredential(new DefaultAzureCredentialOptions()));
 }
+builder.Configuration.AddAzureAppConfiguration(options =>
+options.Connect(builder.Configuration.GetConnectionString("AppConfigConnection"))
+.UseFeatureFlags());
+
+builder.Services.AddFeatureManagement();
+
 
 builder.Services.Configure<AppSettingsOptions>(builder.Configuration.GetSection("AppSettings"));
 builder.Services.AddDbContext<FestivalDbContext>(options =>

@@ -1,10 +1,8 @@
-﻿
-using System.Net;
-
+﻿using IRFestival.Api.Options;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-
-using IRFestival.Api.Options;
+using Microsoft.FeatureManagement;
+using System.Net;
 
 namespace IRFestival.Api.Controllers
 {
@@ -13,16 +11,22 @@ namespace IRFestival.Api.Controllers
     public class SettingsController : ControllerBase
     {
         private readonly AppSettingsOptions _options;
-        public SettingsController(IOptions<AppSettingsOptions> options)
+        private readonly IFeatureManagerSnapshot featureManager;
+
+        public SettingsController(IOptions<AppSettingsOptions> options, IFeatureManagerSnapshot featureManager)
         {
             _options = options.Value;
+            this.featureManager = featureManager;
         }
 
-        [HttpGet]
+        [HttpGet("Features")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(AppSettingsOptions))]
-        public IActionResult Get()
+        public async Task<ActionResult> Get()
         {
-            return Ok(_options);
+            string message = await featureManager.IsEnabledAsync("BuyTickets")
+                ? "The ticket sale has started, go go go."
+                : "you cannot buy any tickets at the moment";
+            return Ok(message);
         }
     }
 }
